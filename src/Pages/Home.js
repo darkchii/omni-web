@@ -1,8 +1,13 @@
-import { Paper, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Card, CardContent, CardHeader, Paper, Typography } from "@mui/material";
 
 function Home() {
     return (
-        <Typography variant="h4">Hello World</Typography>
+        <Box>
+            <Alert severity="warning">
+                <AlertTitle>Notice</AlertTitle>
+                This website is still under construction.
+            </Alert>
+        </Box>
     );
 }
 
