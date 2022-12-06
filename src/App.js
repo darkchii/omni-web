@@ -1,24 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import { Box, Button, Container, createTheme, CssBaseline, Paper, ThemeProvider } from "@mui/material";
+import { useState } from "react";
+import Header from "./Components/Header";
+import Home from "./Pages/Home";
+import Team from "./Pages/Team";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#ff4433',
+    },
+  },
+});
 
 function App() {
+  const [tabPage, setTabPage] = useState(0);
+
+  const pages = [
+    {
+      name: "Home",
+      component: <Home />
+    },
+    {
+      name: "Team",
+      component: <Team />
+    }
+  ];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <Container>
+        <Header onChangeTab={setTabPage} pages={pages} />
+        <Paper>
+          <Box sx={{ p: 2 }}>
+            {pages[tabPage].component}
+          </Box>
+        </Paper>
+      </Container>
+    </ThemeProvider>
   );
 }
 
