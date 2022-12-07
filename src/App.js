@@ -5,6 +5,8 @@ import Header from "./Components/Header";
 import Home from "./Pages/Home";
 import Team from "./Pages/Team";
 import BackgroundImage from "./Images/bg.png";
+import Maps from "./Pages/Maps";
+import Join from "./Pages/Join";
 
 const darkTheme = createTheme({
   palette: {
@@ -29,11 +31,19 @@ function App() {
     {
       name: "Team",
       component: <Team />
+    },
+    {
+      name: "Maps",
+      component: <Maps />
+    },
+    {
+      name: "Join",
+      component: <Join />
     }
   ];
 
   return (
-    <Box sx={{ backgroundImage: `url(${BackgroundImage})`, backgroundSize: 'cover', height: '100vh' }}>
+    <Box sx={{ backgroundImage: `url(${BackgroundImage})`, backgroundSize: 'cover', height: '100%', minHeight: '100vh', backgroundAttachment: 'fixed' }}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <Container>

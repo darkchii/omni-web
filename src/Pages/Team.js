@@ -1,8 +1,9 @@
-import { Button, Card, Chip, Container, Paper, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Button, Card, Chip, Container, Paper, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import PublicIcon from '@mui/icons-material/Public';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import WorkIcon from '@mui/icons-material/Work';
 import Flag from 'react-world-flags';
+import moment from "moment/moment";
 
 function Team() {
     const members = [
@@ -13,7 +14,8 @@ function Team() {
                 {
                     country: "NL",
                     name: "lecc",
-                    role: "Founder / Developer"
+                    role: "Founder / Developer",
+                    joined: "2015-09-01"
                 }
             ]
         },
@@ -37,28 +39,29 @@ function Team() {
             members: [
 
             ]
-        },
-        {
-            group: "Honorable",
-            color: "#52048acc",
-            members: [
-                {
-                    country: "DE",
-                    name: "Paake",
-                    role: "Founder"
-                },
-                {
-                    country: "NL",
-                    name: "Risque",
-                    role: "Leader"
-                },
-                {
-                    country: "HU",
-                    name: "CHRS",
-                    role: "Criminal"
-                },
-            ]
         }
+        // ,
+        // {
+        //     group: "Honorable",
+        //     color: "#52048acc",
+        //     members: [
+        //         {
+        //             country: "DE",
+        //             name: "Paake",
+        //             role: "Founder"
+        //         },
+        //         {
+        //             country: "NL",
+        //             name: "Risque",
+        //             role: "Leader"
+        //         },
+        //         {
+        //             country: "HU",
+        //             name: "CHRS",
+        //             role: "Criminal"
+        //         },
+        //     ]
+        // }
     ]
 
     return (
@@ -72,20 +75,22 @@ function Team() {
                                     return (
                                         <>
                                             <TableRow component={Paper} sx={{ backgroundColor: group.color }}>
-                                                <TableCell colSpan={3}>
-                                                    <Typography variant="h6">{group.group}</Typography>
+                                                <TableCell colSpan={4}>
+                                                    <Typography variant="h6">{group.group} ({group.members.length})</Typography>
                                                 </TableCell>
                                             </TableRow>
                                             {
                                                 group.members.map((member, index) => {
+                                                    const joinDate = moment(member.joined);
                                                     return (
-                                                        <TableRow sx={{ backgroundColor: '#ffffff88' }}>
-                                                            <TableCell><Flag height="16" code={member.country} /></TableCell>
-                                                            <TableCell>
-                                                                <Typography sx={{ color: group.color }} display='inline'>{member.name}</Typography>
-                                                                <Typography sx={{ color: 'primary.main' }} display='inline'>/05</Typography>
+                                                        <TableRow>
+                                                            <TableCell width='5%'><Flag height="16" code={member.country} /></TableCell>
+                                                            <TableCell width='15%'>
+                                                                <Typography fontWeight={'bold'} sx={{ color: 'white' }} display='inline'>{member.name}</Typography>
+                                                                <Typography fontWeight={'bold'} sx={{ color: 'primary.main' }} display='inline'>/05</Typography>
                                                             </TableCell>
                                                             <TableCell><Typography>{member.role}</Typography></TableCell>
+                                                            <TableCell width='20%'><Tooltip title={`${joinDate.format('MMMM Do, YYYY')}`}><Typography>Joined {joinDate.fromNow()}</Typography></Tooltip></TableCell>
                                                         </TableRow>
                                                     );
                                                 })

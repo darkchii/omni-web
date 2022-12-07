@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Development Server",
+        "ip": "46.244.62.136",
+        "customIp": "omnidirectionalfive.com",
+        "port": 22003
+    },
+    {
+        "name": "Development Server",
+        "ip": "46.244.62.136",
+        "customIp": "omnidirectionalfive.com",
+        "port": 22007
+    }
+]
