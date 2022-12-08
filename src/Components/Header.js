@@ -31,6 +31,7 @@ function Header(props) {
                             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                                 {
                                     props.pages.map((page, index) => {
+                                        if(page.visibility === false) return <></>;
                                         return <Tab label={page.name} {...a11yProps(index)} />
                                     })
                                 }

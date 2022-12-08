@@ -1,5 +1,5 @@
 import { Box, Button, Container, createTheme, CssBaseline, Paper, ThemeProvider } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "./Components/Footer";
 import Header from "./Components/Header";
 import Home from "./Pages/Home";
@@ -7,6 +7,8 @@ import Team from "./Pages/Team";
 import BackgroundImage from "./Images/bg.png";
 import Maps from "./Pages/Maps";
 import Join from "./Pages/Join";
+import Login from "./Pages/Login";
+import { IsUserLoggedInUnsafe } from "./Utils/Network";
 
 const darkTheme = createTheme({
   palette: {
@@ -21,7 +23,19 @@ const darkTheme = createTheme({
 });
 
 function App() {
+  const [auth, setAuth] = useState(null);
   const [tabPage, setTabPage] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      if(await IsUserLoggedInUnsafe()){
+        setAuth({
+          token: localStorage.getItem('auth_token'),
+          user_id: localStorage.getItem('auth_user_id')
+        });
+      }
+    })();
+  }, []);
 
   const pages = [
     {
@@ -39,6 +53,11 @@ function App() {
     {
       name: "Join",
       component: <Join />
+    },
+    {
+      name: "Login",
+      component: <Login />,
+      visibility: auth === null
     }
   ];
 

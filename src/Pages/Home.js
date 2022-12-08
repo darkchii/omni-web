@@ -1,9 +1,9 @@
 import { Alert, AlertTitle, Box, Card, CardContent, CardHeader, Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import servers from "../servers.json";
-import GetServerDetails from "../Utils/Network";
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import { GetServerDetails } from "../Utils/Network";
 
 function Home() {
     const [parsedServers, setServers] = useState([]);
