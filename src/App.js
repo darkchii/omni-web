@@ -9,6 +9,7 @@ import Maps from "./Pages/Maps";
 import Join from "./Pages/Join";
 import Login from "./Pages/Login";
 import { IsUserLoggedInUnsafe } from "./Utils/Network";
+import Logout from "./Pages/Logout";
 
 const darkTheme = createTheme({
   palette: {
@@ -25,41 +26,56 @@ const darkTheme = createTheme({
 function App() {
   const [auth, setAuth] = useState(null);
   const [tabPage, setTabPage] = useState(0);
+  const [pages, setPages] = useState([]);
+  const [forceUpdate, setForceUpdate] = useState(0);
+
+  const updatePages = () => {
+    setPages([
+      {
+        name: "Home",
+        component: <Home />
+      },
+      {
+        name: "Team",
+        component: <Team />
+      },
+      {
+        name: "Maps",
+        component: <Maps />
+      },
+      {
+        name: "Join",
+        component: <Join />
+      },
+      {
+        name: "Login",
+        component: <Login onSuccess={() => { setTabPage(0); setForceUpdate(Math.random()); }} />,
+        visibility: auth === null
+      },
+      {
+        name: "Logout",
+        component: <Logout onSuccess={() => { setTabPage(0); setForceUpdate(Math.random()); }} />,
+        visibility: auth !== null
+      }
+    ]);
+  }
 
   useEffect(() => {
     (async () => {
-      if(await IsUserLoggedInUnsafe()){
+      if (await IsUserLoggedInUnsafe()) {
         setAuth({
           token: localStorage.getItem('auth_token'),
           user_id: localStorage.getItem('auth_user_id')
         });
+      } else {
+        updatePages();
       }
     })();
-  }, []);
+  }, [forceUpdate]);
 
-  const pages = [
-    {
-      name: "Home",
-      component: <Home />
-    },
-    {
-      name: "Team",
-      component: <Team />
-    },
-    {
-      name: "Maps",
-      component: <Maps />
-    },
-    {
-      name: "Join",
-      component: <Join />
-    },
-    {
-      name: "Login",
-      component: <Login />,
-      visibility: auth === null
-    }
-  ];
+  useEffect(()=>{
+    updatePages();
+  }, [auth]);
 
   return (
     <Box sx={{ backgroundImage: `url(${BackgroundImage})`, backgroundSize: 'cover', height: '100%', minHeight: '100vh', backgroundAttachment: 'fixed' }}>
@@ -69,7 +85,7 @@ function App() {
           <Header onChangeTab={setTabPage} pages={pages} />
           <Paper sx={{ borderRadius: 0 }}>
             <Box sx={{ p: 2 }}>
-              {pages[tabPage].component}
+              {pages.length > 0 ? pages[tabPage].component : <></>}
             </Box>
           </Paper>
           <Footer />

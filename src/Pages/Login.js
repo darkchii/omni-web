@@ -36,10 +36,9 @@ function Login() {
                 showNotification('Success', 'You have successfully logged in.', 'success');
                 localStorage.setItem('auth_token', response.token);
                 localStorage.setItem('auth_user_id', response.user_id);
+                window.location.reload(false);
             }
 
-
-            console.log(response);
             setWorkingState(false);
         })();
     };

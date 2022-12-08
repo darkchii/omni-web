@@ -87,7 +87,26 @@ export async function LoginUser(username, password) {
     return null;
 }
 
-export async function IsUserLoggedInUnsafe(){
+export async function LogoutUser() {
+    const token = localStorage.getItem('auth_token');
+    const user_id = localStorage.getItem('auth_user_id');
+
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user_id');
+
+    try {
+        await axios.post(`http://${GetUserAPI()}/users/logout`, {
+            token: btoa(token),
+            user_id: user_id
+        });
+    } catch (e) {
+        console.log(e);
+    }
+
+    return true;
+}
+
+export async function IsUserLoggedInUnsafe() {
     //simply checks the localstorage, for stuff like avatars etc
     const token = localStorage.getItem('auth_token');
     const user_id = localStorage.getItem('auth_user_id');
