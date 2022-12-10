@@ -5,13 +5,11 @@ import LockIcon from '@mui/icons-material/Lock';
 import { LoginUser, LogoutUser, RegisterUser } from "../Utils/Network";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import config from '../config.json';
 
 function Logout() {
     const showNotification = (title, message, severity) => {
-        toast[severity](message, {
-            position: "top-right",
-            theme: "dark",
-        });
+        toast[severity](message, config.NOTIFICATIONS);
     };
 
     const logout = () => {

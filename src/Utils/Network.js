@@ -6,29 +6,21 @@ export async function GetServerDetails(ip, port = 22126) {
     return data;
 }
 
-export function GetMapsAPI() {
+export function GetAPI() {
     if (config.LOCAL_MODE) {
-        return config.MAPS_API_LOCAL;
+        return config.API_LOCAL;
     } else {
-        return config.MAPS_API;
-    }
-}
-
-export function GetUserAPI() {
-    if (config.LOCAL_MODE) {
-        return config.USER_API_LOCAL;
-    } else {
-        return config.USER_API;
+        return config.API;
     }
 }
 
 export async function GetMapList() {
     var maps = [];
     try {
-        const { data } = await axios.get(`http://${GetMapsAPI()}/maps/`);
+        const { data } = await axios.get(`http://${GetAPI()}/maps/select`);
         maps = data.data;
     } catch (e) {
-        return null;
+        return console.warn(e);
     }
     return maps;
 }
@@ -37,10 +29,10 @@ export async function GetMapDetails(file) {
     try {
         const formData = new FormData();
         formData.append('file', file);
-        const { data } = await axios.post(`http://${GetMapsAPI()}/inspect`, formData);
+        const { data } = await axios.post(`http://${GetAPI()}/maps/inspect`, formData);
         return data;
     } catch (e) {
-        console.log(e);
+        console.warn(e);
     }
     return null;
 }
@@ -49,23 +41,33 @@ export async function SubmitMap(file) {
     try {
         const formData = new FormData();
         formData.append('file', file);
-        const { data } = await axios.post(`http://${GetMapsAPI()}/upload`, formData);
+        const { data } = await axios.post(`http://${GetAPI()}/maps/upload`, formData);
         return data;
     } catch (e) {
-        console.log(e);
+        console.warn(e);
+    }
+    return null;
+}
+
+export async function GetUser(id) {
+    try {
+        const { data } = await axios.get(`http://${GetAPI()}/users/get/${id}`);
+        return data;
+    } catch (e) {
+        console.warn(e);
     }
     return null;
 }
 
 export async function RegisterUser(username, password) {
     try {
-        const { data } = await axios.post(`http://${GetUserAPI()}/users/register`, {
+        const { data } = await axios.post(`http://${GetAPI()}/users/register`, {
             username: username,
             password: btoa(password)
         });
         return data;
     } catch (e) {
-        console.log(e);
+        console.warn(e);
     }
     return null;
 }
@@ -74,15 +76,14 @@ export async function LoginUser(username, password) {
     if (await IsUserLoggedIn()) {
         return null; //don't allow login if we are already logged in
     }
-    console.log('logging in');
     try {
-        const { data } = await axios.post(`http://${GetUserAPI()}/users/login`, {
+        const { data } = await axios.post(`http://${GetAPI()}/users/login`, {
             username: username,
             password: btoa(password)
         });
         return data;
     } catch (e) {
-        console.log(e);
+        console.warn(e);
     }
     return null;
 }
@@ -95,15 +96,19 @@ export async function LogoutUser() {
     localStorage.removeItem('auth_user_id');
 
     try {
-        await axios.post(`http://${GetUserAPI()}/users/logout`, {
+        await axios.post(`http://${GetAPI()}/users/logout`, {
             token: btoa(token),
             user_id: user_id
         });
     } catch (e) {
-        console.log(e);
+        console.warn(e);
     }
 
     return true;
+}
+
+export function GetLoginID() {
+    return localStorage.getItem('auth_user_id');
 }
 
 export async function IsUserLoggedInUnsafe() {
@@ -125,12 +130,12 @@ export async function IsUserLoggedIn() {
 
     if (token && user_id) {
         try {
-            const { data } = await axios.post(`http://${GetUserAPI()}/users/validate_token`, {
+            const { data } = await axios.post(`http://${GetAPI()}/users/validate_token`, {
                 token: btoa(token),
                 user_id: user_id
             });
             if (data.status === 'success') {
-                console.log(data);
+                // console.log(data);
                 return true;
             } else {
                 return false;
@@ -141,4 +146,36 @@ export async function IsUserLoggedIn() {
     } else {
         return false;
     }
+}
+
+export function GetUserAvatar(id) {
+    return `http://${GetAPI()}/users/avatar/${id}`;
+}
+
+export async function UpdateUserProfile(auth, account, profileData) {
+    if (await !IsUserLoggedIn()) {
+        return {
+            status: 'error',
+            message: 'Authentication error. Please login'
+        }
+    }
+
+    let results = [];
+    try {
+        const formData = new FormData();
+        formData.append('avatar', profileData.avatar);
+
+        const { data } = await axios.post(`http://${GetAPI()}/users/update/${account.id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'token': btoa(auth.token),
+                'user_id': auth.user_id
+            }
+        });
+        results = data;
+    } catch (e) {
+        console.log(e.message);
+    }
+
+    return results;
 }

@@ -13,11 +13,11 @@ function Home() {
             const _servers = [];
             for (const server of servers) {
                 const data = await GetServerDetails(server.ip, server.port + 123);
-                console.log(data);
                 _servers.push({
                     ...server,
                     data: data
                 });
+                setServers(_servers);
             }
             setServers(_servers);
         })();

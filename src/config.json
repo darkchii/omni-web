@@ -1,7 +1,9 @@
 {
-    "MAPS_API": "omnidirectionalfive.com:4600",
-    "USER_API": "omnidirectionalfive.com:4800",
-    "MAPS_API_LOCAL": "127.0.0.1:4600",
-    "USER_API_LOCAL": "127.0.0.1:4800",
-    "LOCAL_MODE": true
+    "API": "omnidirectionalfive.com:4600",
+    "API_LOCAL": "127.0.0.1:4600",
+    "LOCAL_MODE": true,
+    "NOTIFICATIONS": {
+        "position": "top-right",
+        "theme": "dark"
+    }
 }

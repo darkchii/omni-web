@@ -10,6 +10,7 @@ import Join from "./Pages/Join";
 import Login from "./Pages/Login";
 import { IsUserLoggedInUnsafe } from "./Utils/Network";
 import Logout from "./Pages/Logout";
+import Profile from "./Pages/Profile";
 
 const darkTheme = createTheme({
   palette: {
@@ -30,7 +31,7 @@ function App() {
   const [forceUpdate, setForceUpdate] = useState(0);
 
   const updatePages = () => {
-    setPages([
+    const _pages = [
       {
         name: "Home",
         component: <Home />
@@ -53,11 +54,17 @@ function App() {
         visibility: auth === null
       },
       {
+        name: "Profile",
+        component: <Profile auth={auth} user={auth?.user_id} />,
+        visibility: auth !== null
+      },
+      {
         name: "Logout",
         component: <Logout onSuccess={() => { setTabPage(0); setForceUpdate(Math.random()); }} />,
         visibility: auth !== null
       }
-    ]);
+    ]
+    setPages(_pages.filter(page => page.visibility !== false));
   }
 
   useEffect(() => {
@@ -73,7 +80,7 @@ function App() {
     })();
   }, [forceUpdate]);
 
-  useEffect(()=>{
+  useEffect(() => {
     updatePages();
   }, [auth]);
 
